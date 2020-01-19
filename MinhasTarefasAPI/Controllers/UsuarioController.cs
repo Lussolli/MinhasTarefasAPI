@@ -8,7 +8,7 @@ using MinhasTarefasAPI.Repositories.Contracts;
 namespace MinhasTarefasAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller")]
+    [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioRepository _usuarioRepository;
@@ -21,6 +21,7 @@ namespace MinhasTarefasAPI.Controllers
             _userManager = userManager;
         }
 
+        [HttpPost("login")]
         public ActionResult Login([FromBody]UsuarioDTO usuarioDTO)
         {
             ModelState.Remove("ConfirmacaoSenha");
@@ -46,12 +47,14 @@ namespace MinhasTarefasAPI.Controllers
             }
         }
 
+        [HttpPost("")]
         public ActionResult Cadastrar([FromBody]UsuarioDTO usuarioDTO)
         {
             if (ModelState.IsValid)
             {
                 ApplicationUser usuario = new ApplicationUser();
                 usuario.FullName = usuarioDTO.Nome;
+                usuario.UserName = usuarioDTO.Email;
                 usuario.Email = usuarioDTO.Email;
                 var resultado = _userManager.CreateAsync(usuario, usuarioDTO.Senha).Result;
 
